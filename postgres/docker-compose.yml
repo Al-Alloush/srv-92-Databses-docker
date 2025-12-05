@@ -1,17 +1,17 @@
 version: "3.8"
 
 services:
-  postgresql_keycloak:
+  postgresql_db:
     image: postgres:16
-    container_name: postgresql_keycloak
+    container_name: postgresql_db
     command: postgres -c 'max_connections=200'
     environment:
-      #- POSTGRES_HOST_AUTH_METHOD=trust
-      - POSTGRES_DB=keycloak
-      - POSTGRES_USER=db_keycloak_username
+      - POSTGRES_DB=postgres  # Default database for initialization
+      - POSTGRES_USER=db_service_admin_username
       - POSTGRES_PASSWORD=og§d23S2/(s32h3&ff8(8]HJdx34!a
     volumes:
-      - kc_auth_postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d # call the initialization scripts
     ports:
       - "5436:5432"
     restart: always
@@ -19,7 +19,7 @@ services:
       - internal
   pgadmin:
     image: dpage/pgadmin4:9.10.0
-    container_name: pgadmin4_container
+    container_name: postgresql_db_pgadmin4
     restart: always
     ports:
       - "8888:80"
@@ -27,17 +27,16 @@ services:
       PGADMIN_DEFAULT_EMAIL: al-alloush@outlook.com
       PGADMIN_DEFAULT_PASSWORD: cv3g53f3KdflfD!3f4dH6frFnh5d43
     volumes:
-      - kc_auth_pgadmin_data:/var/lib/pgadmin
+      - postgres_pgadmin_data:/var/lib/pgadmin
     depends_on:
-      - postgresql_keycloak
+      - postgresql_db
     networks:
       - internal
 
 volumes:
-  kc_auth_postgres_data:
+  postgres_data:
     external: true
-  kc_auth_pgadmin_data:
-    external: true
+  postgres_pgadmin_data:
 
 networks:
   internal:
