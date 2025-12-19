@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  mssql_db:
+    # Free SQL Server compatible version
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: mssql_db
+    hostname: mssql_db
+    restart: always
+    user: "0:0"  # Run as root to avoid permission issues
+    environment:
+      - ACCEPT_EULA=1
+      # Admin password
+      - MSSQL_SA_PASSWORD=MSSql@2024!Strong#Pass
+      - MSSQL_PID=Developer
+    ports:
+      # External:Internal port mapping
+      - "1434:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql/data
+      - mssql_log:/var/opt/mssql/log
+      - mssql_backup:/var/opt/mssql/backup
+      - ./backups:/var/opt/mssql/backups:rw
+      # Initialization scripts like databases creation
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 5 bash -c '</dev/tcp/localhost/1433' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # SQL Server Management equivalent - Adminer (lightweight web interface)
+  mssql_adminer:
+    image: adminer:4.8.1
+    container_name: mssql_adminer
+    restart: always
+    ports:
+      - "8889:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: mssql_db
+      ADMINER_DESIGN: nette
+    depends_on:
+      - mssql_db
+    networks:
+      - internal
+
+  # Alternative: Azure Data Studio equivalent using CloudBeaver
+  mssql_cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: mssql_cloudbeaver
+    restart: always
+    ports:
+      - "8890:8978"
+    volumes:
+      - cloudbeaver_data:/opt/cloudbeaver/workspace
+    depends_on:
+      - mssql_db
+    networks:
+      - internal
+
+volumes:
+  mssql_data:
+    external: true
+  mssql_log:
+    external: true
+  mssql_backup:
+    external: true
+  cloudbeaver_data:
+
+networks:
+  internal:
+    external: true
