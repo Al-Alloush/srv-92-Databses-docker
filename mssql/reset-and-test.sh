@@ -170,7 +170,7 @@ echo -e "${BLUE}========================================${NC}"
 # Test 1: SA user connection
 echo ""
 echo "Test 1: Testing SA (admin) connection..."
-if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'MSSql@2024!Strong#Pass' -Q "SELECT 'OK' as Status" -h-1 2>/dev/null | grep -q "OK"; then
+if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '8u5rp3tL8p!Bkb432u!L7Q9aB7(CCy22j8YjS6L#msPff!ccHOaS3FnsmLkt2fKwDs58oP3' -Q "SELECT 'OK' as Status" -h-1 2>/dev/null | grep -q "OK"; then
     echo -e "${GREEN}✓ SA connection successful${NC}"
 else
     echo -e "${RED}✗ SA connection failed${NC}"
@@ -179,34 +179,34 @@ fi
 
 # Test 2: Check if database exists
 echo ""
-echo "Test 2: Checking if server_driven_ui_db exists..."
-DB_EXISTS=$(docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'MSSql@2024!Strong#Pass' -Q "SELECT name FROM sys.databases WHERE name = 'server_driven_ui_db'" -h-1 2>/dev/null | grep -c "server_driven_ui_db" || echo "0")
+echo "Test 2: Checking if server_driven_ui_dev_db exists..."
+DB_EXISTS=$(docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '8u5rp3tL8p!Bkb432u!L7Q9aB7(CCy22j8YjS6L#msPff!ccHOaS3FnsmLkt2fKwDs58oP3' -Q "SELECT name FROM sys.databases WHERE name = 'server_driven_ui_dev_db'" -h-1 2>/dev/null | grep -c "server_driven_ui_dev_db" || echo "0")
 
 if [ "$DB_EXISTS" -gt 0 ]; then
-    echo -e "${GREEN}✓ Database server_driven_ui_db exists${NC}"
+    echo -e "${GREEN}✓ Database server_driven_ui_dev_db exists${NC}"
 else
-    echo -e "${RED}✗ Database server_driven_ui_db NOT found${NC}"
+    echo -e "${RED}✗ Database server_driven_ui_dev_db NOT found${NC}"
     echo ""
     echo -e "${YELLOW}Running initialization script...${NC}"
-    docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'MSSql@2024!Strong#Pass' -i /docker-entrypoint-initdb.d/01-create-databases.sql
-    docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'MSSql@2024!Strong#Pass' -i /docker-entrypoint-initdb.d/02-configure-server.sql
+    docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '8u5rp3tL8p!Bkb432u!L7Q9aB7(CCy22j8YjS6L#msPff!ccHOaS3FnsmLkt2fKwDs58oP3' -i /docker-entrypoint-initdb.d/01-create-databases.sql
+    docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '8u5rp3tL8p!Bkb432u!L7Q9aB7(CCy22j8YjS6L#msPff!ccHOaS3FnsmLkt2fKwDs58oP3' -i /docker-entrypoint-initdb.d/02-configure-server.sql
     echo -e "${GREEN}✓ Database initialized${NC}"
 fi
 
 # Test 3: Check if application user exists
 echo ""
 echo "Test 3: Checking if application user exists..."
-if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'MSSql@2024!Strong#Pass' -Q "SELECT name FROM sys.server_principals WHERE name = 'server_driven_ui_user'" -h-1 2>/dev/null | grep -q "server_driven_ui_user"; then
-    echo -e "${GREEN}✓ User server_driven_ui_user exists${NC}"
+if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '8u5rp3tL8p!Bkb432u!L7Q9aB7(CCy22j8YjS6L#msPff!ccHOaS3FnsmLkt2fKwDs58oP3' -Q "SELECT name FROM sys.server_principals WHERE name = 'server_driven_ui_dev_user'" -h-1 2>/dev/null | grep -q "server_driven_ui_dev_user"; then
+    echo -e "${GREEN}✓ User server_driven_ui_dev_user exists${NC}"
 else
-    echo -e "${RED}✗ User server_driven_ui_user NOT found${NC}"
+    echo -e "${RED}✗ User server_driven_ui_dev_user NOT found${NC}"
     exit 1
 fi
 
 # Test 4: Test application user connection
 echo ""
 echo "Test 4: Testing application user connection..."
-if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U server_driven_ui_user -P 'ServerDrivenUI@2024!Pass' -d server_driven_ui_db -Q "SELECT 'OK' as Status" -h-1 2>/dev/null | grep -q "OK"; then
+if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U server_driven_ui_dev_user -P '8fd2SSSvf3fp3tL8p!Bkdd!d8GGh#2j8YjS6L#msPnsmLkt2fKwDs58oP3' -d server_driven_ui_dev_db -Q "SELECT 'OK' as Status" -h-1 2>/dev/null | grep -q "OK"; then
     echo -e "${GREEN}✓ Application user connection successful${NC}"
 else
     echo -e "${RED}✗ Application user connection failed${NC}"
@@ -216,7 +216,7 @@ fi
 # Test 5: Verify database permissions
 echo ""
 echo "Test 5: Verifying database permissions..."
-PERMISSION_TEST=$(docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U server_driven_ui_user -P 'ServerDrivenUI@2024!Pass' -d server_driven_ui_db -Q "SELECT IS_MEMBER('db_owner') as IsOwner" -h-1 2>/dev/null | grep -c "1" || echo "0")
+PERMISSION_TEST=$(docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U server_driven_ui_dev_user -P '8fd2SSSvf3fp3tL8p!Bkdd!d8GGh#2j8YjS6L#msPnsmLkt2fKwDs58oP3' -d server_driven_ui_dev_db -Q "SELECT IS_MEMBER('db_owner') as IsOwner" -h-1 2>/dev/null | grep -c "1" || echo "0")
 
 if [ "$PERMISSION_TEST" -gt 0 ]; then
     echo -e "${GREEN}✓ User has db_owner permissions${NC}"
@@ -228,7 +228,7 @@ fi
 # Test 6: Test readonly user
 echo ""
 echo "Test 6: Testing readonly user..."
-if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U readonly_user -P 'ReadOnly@2024!Pass' -d server_driven_ui_db -Q "SELECT 'OK' as Status" -h-1 2>/dev/null | grep -q "OK"; then
+if docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U readonly_user -P 'sddg23dfAdsd!d8GGh#2j8YjS6L#msPnsmLkt2fKwDs58oP3' -d server_driven_ui_dev_db -Q "SELECT 'OK' as Status" -h-1 2>/dev/null | grep -q "OK"; then
     echo -e "${GREEN}✓ Readonly user connection successful${NC}"
 else
     echo -e "${YELLOW}⚠ Readonly user connection failed (non-critical)${NC}"
@@ -244,7 +244,7 @@ echo -e "${BLUE}========================================${NC}"
 
 echo ""
 echo -e "${GREEN}Database Details:${NC}"
-docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U server_driven_ui_user -P 'ServerDrivenUI@2024!Pass' -d server_driven_ui_db -Q "
+docker exec mssql_db /opt/mssql-tools/bin/sqlcmd -S localhost -U server_driven_ui_dev_user -P '8fd2SSSvf3fp3tL8p!Bkdd!d8GGh#2j8YjS6L#msPnsmLkt2fKwDs58oP3' -d server_driven_ui_dev_db -Q "
 SELECT 
     DB_NAME() as DatabaseName,
     USER_NAME() as CurrentUser,
@@ -264,9 +264,9 @@ echo -e "${GREEN}✓ Reset and Test Complete!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
 echo "MSSQL Server Information:"
-echo "  • Database: server_driven_ui_db"
-echo "  • User: server_driven_ui_user"
-echo "  • Password: ServerDrivenUI@2024!Pass"
+echo "  • Database: server_driven_ui_dev_db"
+echo "  • User: server_driven_ui_dev_user"
+echo "  • Password: 8fd2SSSvf3fp3tL8p!Bkdd!d8GGh#2j8YjS6L#msPnsmLkt2fKwDs58oP3"
 echo "  • Internal Host: mssql_db:1433"
 echo "  • External Host: localhost:1434"
 echo ""
@@ -275,5 +275,5 @@ echo "  • Adminer: http://localhost:8889"
 echo "  • CloudBeaver: http://localhost:8890"
 echo ""
 echo -e "${YELLOW}Spring Boot Connection:${NC}"
-echo "  jdbc:sqlserver://mssql_db:1433;databaseName=server_driven_ui_db;encrypt=false;trustServerCertificate=true"
+echo "  jdbc:sqlserver://mssql_db:1433;databaseName=server_driven_ui_dev_db;encrypt=false;trustServerCertificate=true"
 echo ""

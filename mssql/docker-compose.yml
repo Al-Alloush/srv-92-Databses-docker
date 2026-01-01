@@ -11,7 +11,7 @@ services:
     environment:
       - ACCEPT_EULA=1
       # Admin password
-      - MSSQL_SA_PASSWORD=MSSql@2024!Strong#Pass
+      - MSSQL_SA_PASSWORD=8u5rp3tL8p!Bkb432u!L7Q9aB7(CCy22j8YjS6L#msPff!ccHOaS3FnsmLkt2fKwDs58oP3
       - MSSQL_PID=Developer
     ports:
       # External:Internal port mapping
