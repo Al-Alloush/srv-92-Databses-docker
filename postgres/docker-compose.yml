@@ -15,6 +15,18 @@ services:
     ports:
       - "5436:5432"
     restart: always
+    # Resource limits (docker compose up)
+    cpus: 0.5
+    mem_limit: 512M
+    mem_reservation: 256M
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.50"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
     networks:
       - internal
   pgadmin:
@@ -30,6 +42,18 @@ services:
       - postgres_pgadmin_data:/var/lib/pgadmin
     depends_on:
       - postgresql_db
+    # Resource limits (docker compose up)
+    cpus: 0.25
+    mem_limit: 384M
+    mem_reservation: 192M
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: "0.25"
+        reservations:
+          memory: 192M
+          cpus: "0.10"
     networks:
       - internal
 
