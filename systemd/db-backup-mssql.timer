@@ -1,0 +1,13 @@
+[Unit]
+Description=Daily trigger for MSSQL backup
+Documentation=file:///srv/db/BACKUP.md
+
+[Timer]
+# Daily at 02:30 server local time (staggered behind postgres at 02:00).
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=5min
+Unit=db-backup-mssql.service
+
+[Install]
+WantedBy=timers.target

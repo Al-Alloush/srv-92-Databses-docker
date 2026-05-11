@@ -1,0 +1,18 @@
+[Unit]
+Description=Daily PostgreSQL backup (postgresql_db container)
+Documentation=file:///srv/db/BACKUP.md
+Wants=docker.service
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+User=devopsuser
+Group=devopsuser
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=2h
+ExecStart=/srv/db/postgres/backup.sh
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=db-backup-postgres
