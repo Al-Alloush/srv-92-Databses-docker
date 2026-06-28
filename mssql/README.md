@@ -51,6 +51,26 @@
 **Internal:** `mssql_db:1433`
 **External:** `localhost:1434`
 
+## 🧩 Connecting with the VS Code SQL Server (mssql) Extension
+
+> ⚠️ Two common mistakes cause:
+> *"A network-related or instance-specific error occurred... The server was not found or was not accessible (provider: TCP Provider, error: 35)"*
+>
+> 1. **Don't use `mssql_db`.** That hostname only resolves *inside* the Docker `internal` network (it's what the Spring app uses). An external client must connect to the host.
+> 2. **Use the external port `1434`, and a comma — not a colon.** SQL clients use `host,port` syntax: `localhost,1434` (not `localhost:1434`, not `mssql_db:1433`).
+
+| Field | Value |
+|-------|-------|
+| **Server name** | `localhost,1434` (if VS Code runs on the server) — or `<server-ip>,1434` from another machine |
+| **Authentication type** | SQL Login |
+| **User name** | `sa` (admin) — or `server_driven_ui_user` for the app DB |
+| **Password** | SA password from `docker-compose.yml` (`MSSQL_SA_PASSWORD`) — or `ServerDrivenUI@2024!Pass` for the app user |
+| **Database** | leave blank, or `server_driven_ui_db` |
+| **Encrypt** | Optional (or Mandatory) |
+| **Trust server certificate** | **Yes** — the cert is self-signed (matches `trustServerCertificate=true`) |
+
+If connecting from a different machine, make sure host port `1434` is reachable through the server firewall.
+
 ## 🌐 Web Interfaces
 
 - **Adminer:** http://localhost:8889
