@@ -1,8 +1,12 @@
--- Initialize databases for Keycloak setup
--- This script runs automatically when PostgreSQL container starts for the first time
-
--- Create the main Keycloak database
-CREATE DATABASE keycloak_db;
-
--- Grant privileges to the keycloak user
-GRANT ALL PRIVILEGES ON DATABASE keycloak_db TO db_keycloak_username;
+-- *******************************************************************************
+-- PostgreSQL first-start initialization
+--
+-- This script runs automatically ONLY when the container starts with an empty
+-- data volume. It intentionally does nothing.
+--
+-- Databases and roles are managed by postgres-manager.sh from databases.conf
+-- (passwords come from /srv/db/.env). After a fresh start, run:
+--   ./postgres-manager.sh apply
+-- ("reset-all" does this automatically.)
+-- *******************************************************************************
+SELECT 1;

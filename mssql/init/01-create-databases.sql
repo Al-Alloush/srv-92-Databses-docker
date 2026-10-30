@@ -99,7 +99,7 @@ IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'readonly_user
 BEGIN
     CREATE USER [readonly_user] FOR LOGIN [readonly_user];
     ALTER ROLE [db_datareader] ADD MEMBER [readonly_user];
-    PRINT 'Created readonly user in server_driven_ui_dev_db';
+    PRINT 'Created readonly user in server_driven_ui_test_db';
 END
 GO
 -- *******************************************************************************
@@ -136,7 +136,7 @@ IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'readonly_user
 BEGIN
     CREATE USER [readonly_user] FOR LOGIN [readonly_user];
     ALTER ROLE [db_datareader] ADD MEMBER [readonly_user];
-    PRINT 'Created readonly user in server_driven_ui_dev_db';
+    PRINT 'Created readonly user in server_driven_ui_db';
 END
 GO
 -- ------------------------------------------------------------------------------
@@ -152,6 +152,8 @@ BEGIN
     CREATE DATABASE [imeterrecorder_dev_db];
     PRINT 'Created database: imeterrecorder_dev_db';
 END
+ELSE
+    PRINT 'Database imeterrecorder_dev_db already exists - skipping';
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'imeterrecorder_dev_admin')
@@ -190,6 +192,8 @@ BEGIN
     CREATE DATABASE [imeterrecorder_test_db];
     PRINT 'Created database: imeterrecorder_test_db';
 END
+ELSE
+    PRINT 'Database imeterrecorder_test_db already exists - skipping';
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'imeterrecorder_test_admin')
@@ -227,6 +231,8 @@ BEGIN
     CREATE DATABASE [imeterrecorder_db];
     PRINT 'Created database: imeterrecorder_db';
 END
+ELSE
+    PRINT 'Database imeterrecorder_db already exists - skipping';
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'imeterrecorder_user')
@@ -250,6 +256,88 @@ IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'readonly_user
 BEGIN
     CREATE USER [readonly_user] FOR LOGIN [readonly_user];
     ALTER ROLE [db_datareader] ADD MEMBER [readonly_user];
+END
+GO
+
+-- ******************************************************************************
+-- DATABASE: imeterreader_extract_dev (added 2026-10-22 via mssql-manager.sh)
+
+USE master;
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'imeterreader_extract_dev')
+BEGIN
+    CREATE DATABASE [imeterreader_extract_dev];
+    PRINT 'Created database: imeterreader_extract_dev';
+END
+ELSE
+    PRINT 'Database imeterreader_extract_dev already exists - skipping';
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'imeterrecorder_ext_dev_admin')
+BEGIN
+    CREATE LOGIN [imeterrecorder_ext_dev_admin] WITH PASSWORD = 'exti55374C2Lzev*SAk2!i25PG939';
+    PRINT 'Created login: imeterrecorder_ext_dev_admin';
+END
+GO
+
+USE [imeterreader_extract_dev];
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'imeterrecorder_ext_dev_admin')
+BEGIN
+    CREATE USER [imeterrecorder_ext_dev_admin] FOR LOGIN [imeterrecorder_ext_dev_admin];
+    ALTER ROLE [db_owner] ADD MEMBER [imeterrecorder_ext_dev_admin];
+    PRINT 'Created user: imeterrecorder_ext_dev_admin';
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'readonly_user')
+BEGIN
+    CREATE USER [readonly_user] FOR LOGIN [readonly_user];
+    ALTER ROLE [db_datareader] ADD MEMBER [readonly_user];
+    PRINT 'Created readonly user in imeterreader_extract_dev';
+END
+GO
+
+-- ******************************************************************************
+-- DATABASE: imeterreader_extract_prod (added 2026-10-28 via mssql-manager.sh)
+
+USE master;
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'imeterreader_extract_prod')
+BEGIN
+    CREATE DATABASE [imeterreader_extract_prod];
+    PRINT 'Created database: imeterreader_extract_prod';
+END
+ELSE
+    PRINT 'Database imeterreader_extract_prod already exists - skipping';
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'imeterrecorder_ext_prod_admin')
+BEGIN
+    CREATE LOGIN [imeterrecorder_ext_prod_admin] WITH PASSWORD = 'exti553sd6*SAk2!6PG9g33t67d8!dd&gg';
+    PRINT 'Created login: imeterrecorder_ext_prod_admin';
+END
+GO
+
+USE [imeterreader_extract_prod];
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'imeterrecorder_ext_prod_admin')
+BEGIN
+    CREATE USER [imeterrecorder_ext_prod_admin] FOR LOGIN [imeterrecorder_ext_prod_admin];
+    ALTER ROLE [db_owner] ADD MEMBER [imeterrecorder_ext_prod_admin];
+    PRINT 'Created user: imeterrecorder_ext_prod_admin';
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'readonly_user')
+BEGIN
+    CREATE USER [readonly_user] FOR LOGIN [readonly_user];
+    ALTER ROLE [db_datareader] ADD MEMBER [readonly_user];
+    PRINT 'Created readonly user in imeterreader_extract_prod';
 END
 GO
 

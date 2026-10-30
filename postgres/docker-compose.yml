@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d # call the initialization scripts
     ports:
-      - "5436:5432"
+      - "127.0.0.1:5436:5432"
     restart: always
     # Resource limits (docker compose up)
     cpus: 0.5
