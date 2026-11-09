@@ -341,6 +341,47 @@ BEGIN
 END
 GO
 
+-- ******************************************************************************
+-- DATABASE: imeterreader_deals_dev (added 2026-11-03 via mssql-manager.sh)
+
+USE master;
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'imeterreader_deals_dev')
+BEGIN
+    CREATE DATABASE [imeterreader_deals_dev];
+    PRINT 'Created database: imeterreader_deals_dev';
+END
+ELSE
+    PRINT 'Database imeterreader_deals_dev already exists - skipping';
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'imeterreader_deals_user')
+BEGIN
+    CREATE LOGIN [imeterreader_deals_user] WITH PASSWORD = 'dJgdj!Gdh-ddudh%-fFvDUidh-3hhdG6';
+    PRINT 'Created login: imeterreader_deals_user';
+END
+GO
+
+USE [imeterreader_deals_dev];
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'imeterreader_deals_user')
+BEGIN
+    CREATE USER [imeterreader_deals_user] FOR LOGIN [imeterreader_deals_user];
+    ALTER ROLE [db_owner] ADD MEMBER [imeterreader_deals_user];
+    PRINT 'Created user: imeterreader_deals_user';
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'readonly_user')
+BEGIN
+    CREATE USER [readonly_user] FOR LOGIN [readonly_user];
+    ALTER ROLE [db_datareader] ADD MEMBER [readonly_user];
+    PRINT 'Created readonly user in imeterreader_deals_dev';
+END
+GO
+
 PRINT '============================================';
 PRINT 'All databases initialized successfully!';
 PRINT '============================================';
